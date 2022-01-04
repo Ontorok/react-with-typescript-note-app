@@ -7,9 +7,7 @@ const Header = (props: IHeaderProps) => {
   return (
     <Navbar fixed="top" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="#" className="text-left">
-          Schedule Map
-        </Navbar.Brand>
+        <Navbar.Brand>Schedule Map</Navbar.Brand>
       </Container>
     </Navbar>
   );
