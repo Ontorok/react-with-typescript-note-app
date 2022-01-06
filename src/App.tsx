@@ -5,32 +5,39 @@ import Header from "./components/Header";
 import NoteList from "./components/NoteList";
 import { INote } from "./models/node.model";
 
+const initialFieldValues = {
+  id: "",
+  title: "",
+  text: "",
+  color: "#dfdfdf",
+  date: "",
+};
+
 function App() {
-  const [notes] = useState<INote[]>([
-    {
-      id: new Date().toLocaleTimeString(),
-      title: "Meetings",
-      text: "Meeting with UI/UX team",
-      color: "#efefef",
-      date: new Date().toLocaleDateString(),
-    },
-  ]);
+  const [notes, setNotes] = useState<INote[]>([]);
+  const [note, setNote] = useState<INote>(initialFieldValues);
 
-  const [note, setNote] = useState<INote>({
-    id: "",
-    title: "",
-    text: "",
-    color: "",
-    date: "",
-  });
-
-  const onInputChange = (e: ChangeEvent<HTMLFormElement>): void => {
+  const onInputChange = (
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     const { name, value } = e.target;
+    setNote({ ...note, [name]: value });
+  };
+
+  const onDeleteNote = (id: string) => {
+    setNotes(notes.filter((note) => note.id !== id));
   };
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(note);
+    const date = new Date();
+    const data = Object.assign({}, note);
+    data.id = `${date.getFullYear()}${
+      date.getMonth() < 10 ? `0${`${date.getMonth() + 1}`}` : date.getMonth()
+    }${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`;
+    console.log(data);
+    setNotes([...notes, data]);
+    setNote(initialFieldValues);
   };
 
   return (
@@ -39,7 +46,7 @@ function App() {
       <Container className="mt-5">
         <Row>
           <Col>
-            <NoteList notes={notes} />
+            <NoteList notes={notes} onDeleteNote={onDeleteNote} />
           </Col>
         </Row>
         <Row>

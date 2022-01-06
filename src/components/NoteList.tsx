@@ -1,24 +1,18 @@
 import * as React from "react";
 import { INote } from "../models/node.model";
+import Note from "./Note";
 
 interface INoteListProps {
   notes: INote[];
+  onDeleteNote(id: string): void;
 }
 
-const NoteList: React.FunctionComponent<INoteListProps> = ({ notes }) => {
+const NoteList: React.FC<INoteListProps> = ({ notes, onDeleteNote }) => {
   return (
     <React.Fragment>
       <h3 className="mt-3">Notes</h3>
       {notes.map((note, key: number) => (
-        <div
-          style={{ backgroundColor: note.color }}
-          key={key}
-          className="p-3 rounded"
-        >
-          <h4>{note.title}</h4>
-          <h6>{note.text}</h6>
-          <p>{note.date}</p>
-        </div>
+        <Note key={key} note={note} onDeleteNote={onDeleteNote} />
       ))}
     </React.Fragment>
   );
