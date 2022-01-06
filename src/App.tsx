@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row } from "react-bootstrap";
 import "./App.css";
 import Header from "./components/Header";
 import NoteList from "./components/NoteList";
@@ -16,10 +16,12 @@ const initialFieldValues = {
 function App() {
   const [notes, setNotes] = useState<INote[]>([]);
   const [note, setNote] = useState<INote>(initialFieldValues);
+  const [error, setError] = useState<string>("");
 
   const onInputChange = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ): void => {
+    setError("");
     const { name, value } = e.target;
     setNote({ ...note, [name]: value });
   };
@@ -30,8 +32,13 @@ function App() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const date = new Date();
     const data = Object.assign({}, note);
+    if (data.title === "" || data.text === "") {
+      return setError("All Fiedls are mandatory");
+    }
+
     data.id = `${date.getFullYear()}${
       date.getMonth() < 10 ? `0${`${date.getMonth() + 1}`}` : date.getMonth()
     }${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`;
@@ -51,6 +58,7 @@ function App() {
         </Row>
         <Row>
           <Col>
+            {error && <Alert variant="danger">{error}</Alert>}
             <form className="mt-3" autoComplete="off" onSubmit={onSubmit}>
               <div>
                 <label htmlFor="title" className="form-lable">
